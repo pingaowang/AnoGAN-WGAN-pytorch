@@ -15,8 +15,8 @@ import numpy as np
 import pandas as pd
 # import jpeg4py as jpeg
 
-from .albumentations import *
-from .albumentations.pytorch import ToTensor
+# from .albumentations import *
+# from .albumentations.pytorch import ToTensor
 
 from torchvision.datasets import MNIST
 
@@ -43,14 +43,14 @@ class MNIST_abnormal(Dataset):
         # treating one class being an anomaly, while the rest of the
         # classes are considered as the normal class
         self.phase = phase
-        self.transforms = self.get_transforms(self.phase)
+        # self.transforms = self.get_transforms(self.phase)
         str_2_int = {'zero': 0, 'one': 1, 'two': 2, 'three': 3, 'four': 4,
                      'five': 5, 'six': 6, 'seven': 7, 'eight': 8, 'nine': 9}
         # 6903 7877 6990 7141 6824 6313 6876 7293 6825 6958
         target_class = str_2_int[target_class]
 
         root = 'data/mnist'
-        ori_mnist_dataset = MNIST(root)
+        ori_mnist_dataset = MNIST(root, download=True)
         if not ori_mnist_dataset._check_exists():
             ori_mnist_dataset.download()
         del ori_mnist_dataset
@@ -77,22 +77,22 @@ class MNIST_abnormal(Dataset):
             self.data, self.target = self.test_data, self.test_target
         assert len(self.data) == len(self.target)
 
-    def get_transforms(self, phase):
-        list_transforms = []
-        list_transforms.extend([Resize(p=1, height=32, width=32)])  # 512  TODO
-        if phase == 'train':
-            list_transforms.extend([
-                ShiftScaleRotate(p=0.5, shift_limit=(0.01, 0.01), scale_limit=0.1, rotate_limit=10)
-            ])
-        list_transforms.extend([ToTensor()])
-
-        list_trfms = Compose(list_transforms)
-        return list_trfms
+    # def get_transforms(self, phase):
+    #     list_transforms = []
+    #     list_transforms.extend([Resize(p=1, height=32, width=32)])  # 512  TODO
+    #     if phase == 'train':
+    #         list_transforms.extend([
+    #             ShiftScaleRotate(p=0.5, shift_limit=(0.01, 0.01), scale_limit=0.1, rotate_limit=10)
+    #         ])
+    #     list_transforms.extend([ToTensor()])
+    #
+    #     list_trfms = Compose(list_transforms)
+    #     return list_trfms
 
     def __getitem__(self, index):
         image, target = self.data[index], int(self.target[index])
         image = np.expand_dims(image.numpy(), axis=-1)
-        image = self.transforms(image=image)["image"]  # [c,h,w]
+        # image = self.transforms(image=image)["image"]  # [c,h,w]  # TODO: changed
         # cv2.imwrite('./debug/'+str(index)+'.jpg',image)
         return image, target
 

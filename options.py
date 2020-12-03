@@ -29,7 +29,7 @@ class Options():
         self.parser.add_argument('--category', type=str, default='zero', help='category')
         self.parser.add_argument('--experiment_name', type=str,default='anogan_wgan') #
 
-        self.parser.add_argument('--gpu_ids', type=str, default='0', help='gpu ids: e.g. 0  0,1,2, 0,2. use -1 for CPU')
+        self.parser.add_argument('--gpu_ids', type=str, default='-1', help='gpu ids: e.g. 0  0,1,2, 0,2. use -1 for CPU')
         self.parser.add_argument('--batchsize', type=int, default=8, help='input batch size') #8
         self.parser.add_argument('--lr', type=float, default=0.0002, help='initial learning rate for adam') #0.001
         self.parser.add_argument('--niter', type=int, default=500, help='number of epochs to train for')
@@ -50,7 +50,10 @@ class Options():
             if id >= 0:
                 self.opt.gpu_ids.append(id)
         # set gpu ids
-        torch.cuda.set_device(self.opt.gpu_ids[0])
+        if len(self.opt.gpu_ids) != 0:
+            torch.cuda.set_device(self.opt.gpu_ids[0])
+        # else:
+        #     torch.cuda.set_device('cpu')
 
         self.opt.experiment_name = self.opt.category + '_' + self.opt.experiment_name
         args = vars(self.opt)

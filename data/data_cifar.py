@@ -21,8 +21,8 @@ import numpy as np
 import pandas as pd
 # import jpeg4py as jpeg
 
-from .albumentations import *
-from .albumentations.pytorch import ToTensor
+# from .albumentations import *
+# from .albumentations.pytorch import ToTensor
 
 from torchvision.datasets.cifar import CIFAR10
 from torchvision.datasets.utils import check_integrity
